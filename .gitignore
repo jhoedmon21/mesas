@@ -51,3 +51,15 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# ---------------------------------------------------------------------------
+# Solo se publica lo que la aplicación necesita para compilar y correr.
+# Lo de abajo sigue en disco —son la procedencia de los datos y las
+# herramientas que los generaron— pero no viaja al repositorio ni al build.
+# Para publicarlo: git add -f <ruta>
+# ---------------------------------------------------------------------------
+/docs/
+/scripts/
+/data/*.json
+/lib/electoral.ts
+/lib/useAnimatedNumber.ts

@@ -38,8 +38,6 @@ REM --- 4. Abrir el navegador y arrancar -------------------------------------
 echo   [4/4] Iniciando servidor...
 echo.
 echo   Mando electoral .... http://localhost:3001/electoral
-echo   Portada ............ http://localhost:3001/
-echo   Territorio ......... http://localhost:3001/territorio
 echo.
 echo   Para detener el servidor: cierra esta ventana o pulsa Ctrl+C
 echo.
