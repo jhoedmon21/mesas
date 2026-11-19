@@ -1,0 +1,16 @@
+# Lo que no viaja al build remoto de Vercel.
+# El CLI instala las dependencias en el servidor, así que `node_modules` nunca
+# se sube; los directorios de build y las capturas de verificación tampoco.
+node_modules
+.build
+.next
+.next-old*
+.captura
+.tmp-*
+*.log
+*.pid
+*.png
+.vercel
+.git
+docs
+scripts

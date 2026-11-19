@@ -48,3 +48,6 @@ next-env.d.ts
 
 # sondas sueltas de ONPE
 /onpe_probe.html
+
+.vercel
+.env*
