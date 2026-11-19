@@ -1,0 +1,468 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "InterHUD";
+  src: url("/fonts/inter-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "InterHUD", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Identidad Fuerza Arequipeña: carmesí de partido, oro de estandarte y
+     marfil de papel. Todo el tablero se lee sobre esta triada. */
+  --color-fa-rojo: #e61919;
+  --color-fa-rojo-hondo: #b01212;
+  --color-fa-rojo-tinta: #7a0c0c;
+  --color-fa-oro: #f2c14e;
+  --color-fa-oro-hondo: #c99a2e;
+  --color-fa-marfil: #fbf7f0;
+  --color-fa-carbon: #0d0b0b;
+
+  /* Tokens heredados: la interfaz los usa, aquí sólo cambian de valor. */
+  --color-hud-bg: #0d0b0b;
+  --color-hud-deep: #140f0f;
+  --color-hud-cyan: #f2c14e;
+  --color-hud-amber: #f2c14e;
+  --color-hud-green: #34d399;
+  --color-hud-red: #e61919;
+
+  /* Remapeo de la paleta usada por los componentes:
+       cyan    -> carmesí Fuerza Arequipeña (marca, Zegarra, acción)
+       amber   -> oro de estandarte (pozo, prioridad, secundario)
+       slate   -> neutro cálido de papel (fondos y texto)
+       rose    -> azul acero (contrincante; nunca se confunde con la marca)
+       emerald -> verde andino (mejora / ganancia aritmética)
+     Ningún componente cambia de estructura: sólo de significado. */
+
+  --color-cyan-50: #fff1f1;
+  --color-cyan-100: #ffe1e1;
+  --color-cyan-200: #ffc5c5;
+  --color-cyan-300: #ff9b9b;
+  --color-cyan-400: #f65c5c;
+  --color-cyan-500: #e61919;
+  --color-cyan-600: #c41212;
+  --color-cyan-700: #a10f0f;
+  --color-cyan-800: #7a0c0c;
+  --color-cyan-900: #5c0a0a;
+  --color-cyan-950: #360606;
+
+  --color-amber-50: #fdf8e9;
+  --color-amber-100: #faeec4;
+  --color-amber-200: #f6e08f;
+  --color-amber-300: #f2c14e;
+  --color-amber-400: #e2aa2f;
+  --color-amber-500: #c48f24;
+  --color-amber-600: #a3721e;
+  --color-amber-700: #7f5619;
+  --color-amber-800: #5d3f13;
+  --color-amber-900: #41290d;
+  --color-amber-950: #271807;
+
+  --color-slate-50: #f8f2e9;
+  --color-slate-100: #ece1d4;
+  --color-slate-200: #d8c8b8;
+  --color-slate-300: #b9a595;
+  --color-slate-400: #8a7768;
+  --color-slate-500: #5c4d43;
+  --color-slate-600: #3d322b;
+  --color-slate-700: #2c231e;
+  --color-slate-800: #1e1815;
+  --color-slate-900: #14100e;
+  --color-slate-950: #0b0908;
+
+  --color-rose-200: #cfe1ef;
+  --color-rose-300: #a9c8de;
+  --color-rose-400: #83aecb;
+  --color-rose-500: #5b8db8;
+  --color-rose-600: #477199;
+
+  --color-emerald-200: #b6ead0;
+  --color-emerald-300: #7fd3a3;
+  --color-emerald-400: #4fbb85;
+  --color-emerald-500: #2f9a68;
+  --color-emerald-600: #247d54;
+}
+
+:root {
+  color-scheme: dark;
+  --hud-line: rgba(242, 193, 78, 0.18);
+  --hud-line-strong: rgba(242, 193, 78, 0.42);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: #0d0b0b;
+  color: #f5ede1;
+  font-family: var(--font-sans);
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+::selection {
+  background: rgba(230, 25, 25, 0.35);
+  color: #fff8ef;
+}
+
+@layer components {
+  .hud-panel {
+    @apply relative rounded-2xl border bg-[#120d0d]/88 backdrop-blur-xl;
+    border-color: var(--hud-line);
+    box-shadow:
+      0 24px 60px -20px rgba(10, 2, 2, 0.92),
+      inset 0 1px 0 rgba(242, 193, 78, 0.07);
+  }
+
+  .hud-panel::before,
+  .hud-panel::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: rgba(242, 193, 78, 0.55);
+    pointer-events: none;
+  }
+
+  .hud-panel::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-top-left-radius: 0.9rem;
+  }
+
+  .hud-panel::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+    border-bottom-right-radius: 0.9rem;
+  }
+
+  .hud-label {
+    @apply text-[10px] font-semibold uppercase tracking-[0.2em] text-[#d9c4ab];
+  }
+
+  .hud-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em];
+  }
+
+  .hud-icon-btn {
+    @apply inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#5a4436]/70 bg-[#1a1412]/70 text-[#e7d8c6] transition hover:border-[#f2c14e]/60 hover:bg-[#f2c14e]/10 hover:text-[#f7d98b];
+  }
+
+  .hud-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(242, 193, 78, 0.35) transparent;
+  }
+
+  .hud-scroll::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  .hud-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .hud-scroll::-webkit-scrollbar-thumb {
+    background: rgba(242, 193, 78, 0.32);
+    border-radius: 999px;
+  }
+}
+
+/* ---------------------------------------------------------------- Sliders */
+
+.hud-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--range-accent, #e61919) 0%,
+    var(--range-accent, #e61919) var(--fill, 40%),
+    rgba(148, 163, 184, 0.2) var(--fill, 40%),
+    rgba(148, 163, 184, 0.2) 100%
+  );
+  outline: none;
+  cursor: pointer;
+}
+
+.hud-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #fff6e8;
+  border: 2px solid var(--range-accent, #e61919);
+  box-shadow:
+    0 0 0 3px rgba(230, 25, 25, 0.14),
+    0 0 14px rgba(230, 25, 25, 0.55);
+  transition: transform 0.15s ease;
+}
+
+.hud-range::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+}
+
+.hud-range::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: #ecfeff;
+  border: 2px solid var(--range-accent, #e61919);
+  box-shadow: 0 0 14px rgba(230, 25, 25, 0.55);
+}
+
+.hud-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid #e61919;
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------- Animations */
+
+@keyframes hud-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+@keyframes hud-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+@keyframes hud-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hud-slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes hud-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hud-sheet-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pulse-dot {
+  animation: hud-pulse 2.2s ease-in-out infinite;
+}
+
+.hud-sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(242, 193, 78, 0.16) 45%,
+    transparent 70%
+  );
+  animation: hud-sweep 6.5s linear infinite;
+  pointer-events: none;
+}
+
+.animate-slide-up {
+  animation: hud-slide-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-right {
+  animation: hud-slide-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: hud-fade-in 0.35s ease both;
+}
+
+.animate-sheet-up {
+  animation: hud-sheet-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------- Map */
+
+.maplibregl-map {
+  font-family: var(--font-sans);
+}
+
+.maplibregl-canvas {
+  outline: none;
+}
+
+.maplibregl-ctrl-attrib {
+  background: rgba(2, 6, 23, 0.72) !important;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 8px;
+  color: #94a3b8 !important;
+  font-size: 9px !important;
+  backdrop-filter: blur(8px);
+}
+
+.maplibregl-ctrl-attrib a {
+  color: #a5b4c8 !important;
+}
+
+.maplibregl-ctrl-group {
+  background: rgba(2, 6, 23, 0.8) !important;
+  border: 1px solid rgba(148, 163, 184, 0.22) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: 0 10px 30px -12px rgba(2, 6, 23, 0.9) !important;
+  backdrop-filter: blur(10px);
+}
+
+.maplibregl-ctrl-group button + button {
+  border-top: 1px solid rgba(148, 163, 184, 0.16) !important;
+}
+
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: invert(0.72) brightness(1.15);
+}
+
+.maplibregl-ctrl-group button:hover {
+  background: rgba(230, 25, 25, 0.14) !important;
+}
+
+.maplibregl-ctrl-bottom-right {
+  margin: 0 10px 112px 0 !important;
+}
+
+@media (min-width: 1024px) {
+  .maplibregl-ctrl-bottom-right {
+    margin-bottom: 112px !important;
+  }
+}
+
+.map-vignette {
+  background:
+    radial-gradient(
+      120% 90% at 50% 45%,
+      transparent 55%,
+      rgba(60, 12, 12, 0.16) 84%,
+      rgba(40, 6, 6, 0.34) 100%
+    ),
+    linear-gradient(180deg, rgba(40, 6, 6, 0.2) 0%, transparent 16%);
+}
+
+.map-grid {
+  background-image:
+    linear-gradient(rgba(230, 25, 25, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(230, 25, 25, 0.055) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.65), transparent 78%);
+}
+
+/* ------------------------------------------------------------------ Print */
+
+.ficha-print {
+  display: none;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    height: auto;
+    overflow: visible;
+    background: #ffffff !important;
+  }
+
+  /* El contenedor del tablero mantiene el fondo oscuro y 100dvh en pantalla;
+     en impresión debe dejar ver el papel y crecer con la ficha. */
+  main {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .ficha-print {
+    display: block !important;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 11mm 12mm;
+    color: #0f172a;
+    background: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot,
+  .hud-sweep::after,
+  .animate-slide-up,
+  .animate-slide-right,
+  .animate-fade-in,
+  .animate-sheet-up {
+    animation: none !important;
+  }
+
+  * {
+    scroll-behavior: auto !important;
+  }
+}
