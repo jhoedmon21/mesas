@@ -14,3 +14,6 @@ node_modules
 .git
 docs
 scripts
+data/*.json
+lib/electoral.ts
+lib/useAnimatedNumber.ts
